@@ -18,7 +18,7 @@ jobs:
     
   - task: WindowsMachineFileCopy@2
     inputs:
-      SourcePath: 'C:\agent\_work\5\s\BS RECEPT WATCHER\bin\Release\net8.0-windows\publish'
+      SourcePath: 'C:\agent\_work\5\s\BS RECEPT WATCHER\bin\Release\net8.0\publish'
       MachineNames: '192.168.1.104'
       AdminUserName: 'AMPHI-PROD\AdminProd'
       AdminPassword: '$(AdminPassword)'
