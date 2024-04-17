@@ -1,0 +1,25 @@
+J
+
+; conf imprimante (vitesse...)
+H 100
+
+; format etiquette
+S l1;0,0,23,26,89
+
+; option impression
+O R,T,p
+
+; impression code barre
+B 75,4,0,DATAMATRIX,0.8;#UidUnitStorage#
+B 3,4,0,DATAMATRIX,0.8;#UidCodeArticle#
+
+; impression textes
+T 28,8,0,5,pt16;#UidCodeArticle#
+T 30,21,0,5,pt16;Qte: #Quantite#
+T 69,19,0,5,pt8;#UidUnitStorage#
+T 34,15,0,5,pt16;G60202
+T 2,20,0,5,pt8;#Date# 
+
+; nb d'étiquette
+A #QuantiteEtiquettes#
+

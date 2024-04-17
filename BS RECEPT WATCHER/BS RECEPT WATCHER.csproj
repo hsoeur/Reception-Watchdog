@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-BS_RECEPT_WATCHER-26b230b7-0c1d-48f9-ace2-a5c5e86fba85</UserSecretsId>
+    <RootNamespace>BS_RECEPT_WATCHER</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CommandGenerator">
+      <HintPath>..\..\..\Customs\CommandGenerator\bin\Debug\net8.0\CommandGenerator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
