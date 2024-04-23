@@ -1,0 +1,25 @@
+trigger:
+- master
+
+pool:
+  name: Default
+  demands:
+   - agent.name -equals VM-DEVOPS
+
+jobs:
+- job: BuildDeploy
+  displayName: 'Build - Deploy'
+  steps:
+  - script: dotnet build --configuration Release
+    displayName: 'Build Release'
+
+  - script: dotnet publish --configuration Release
+    displayName: 'Publish Release'
+    
+  - task: WindowsMachineFileCopy@2
+    inputs:
+      SourcePath: 'C:\agent\_work\5\s\BS RECEPT WATCHER\bin\Release\net8.0\publish'
+      MachineNames: '192.168.1.104'
+      AdminUserName: 'AMPHI-PROD\AdminProd'
+      AdminPassword: '$(AdminPassword)'
+      TargetPath: '\\vm-app\Deploy\bs\BS RECEPT WATCHER'
