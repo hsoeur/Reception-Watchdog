@@ -10,7 +10,7 @@ namespace BS_RECEPT_WATCHER.Models
     public class UnitStorage
     {
         [Key]
-        public string UIDUnitStorage { get; set; } = String.Empty;
+        public string UidUnitStorage { get; set; } = String.Empty;
         public string Quantite { get; set; } = String.Empty;
         public string UIDArticle { get; set; } = String.Empty;
     }

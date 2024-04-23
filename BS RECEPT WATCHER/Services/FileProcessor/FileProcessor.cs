@@ -55,38 +55,54 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
 
         private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon)
         {
-            UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage);
-
-            if (isDoublon == "10")
+            try
             {
-                ProcessDoublon(unitStorage);
-                await _apiService.CreateUnitStorage(unitStorage);
-                AddLineToXml(unitStorage);
+                UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage);
 
-                Log.Information($"Package Unit n° {unitStorage.UIDUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+                if (isDoublon == "10")
+                {
+                    ProcessDoublon(unitStorage);
+                    await _apiService.CreateUnitStorage(unitStorage);
+                    AddLineToXml(unitStorage);
 
-            }
-            else
+                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+
+                }
+                else
+                {
+                    ProcessSingle(unitStorage);
+                    await _apiService.CreateUnitStorage(unitStorage);
+                    AddLineToXml(unitStorage);
+
+                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+                }
+            }catch (Exception ex)
             {
-                ProcessSingle(unitStorage);
-                await _apiService.CreateUnitStorage(unitStorage);
-                AddLineToXml(unitStorage);
-
-                Log.Information($"Package Unit n° {unitStorage.UIDUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+                Log.Error(ex.Message);
             }
+            
         }
 
         private async Task<UnitStorage> CreateUnitStorageWithLatestUid(string uidArticle, string quantite, string uidUnitStorage)
         {
-            var latestUnitStorageUid = await _apiService.GetLatestUidWithUnitStorage(uidUnitStorage);
-
-            UnitStorage unitStorage = new UnitStorage()
+            try
             {
-                UIDUnitStorage = latestUnitStorageUid,
-                Quantite = quantite,
-                UIDArticle = uidArticle
-            };
-            return unitStorage;
+                var latestUnitStorageUid = await _apiService.GetLatestUidWithUnitStorage(uidUnitStorage);
+
+                UnitStorage unitStorage = new UnitStorage()
+                {
+                    UidUnitStorage = latestUnitStorageUid,
+                    Quantite = quantite,
+                    UIDArticle = uidArticle
+                };
+                return unitStorage;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+            return null;
+            
         }
 
         private void ProcessSingle(UnitStorage unitStorage)
@@ -103,8 +119,8 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
 
         private void AddLineToXml(UnitStorage unitStorage)
         {
-            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UIDUnitStorage, unitStorage.UIDArticle, unitStorage.Quantite);
-            Log.Information($"Fichier Xml créé pour la bobine n°{unitStorage.UIDUnitStorage}");
+            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UIDArticle, unitStorage.Quantite);
+            Log.Information($"Fichier Xml créé pour la bobine n°{unitStorage.UidUnitStorage}");
         }
     }
 }
