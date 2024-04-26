@@ -1,6 +1,7 @@
 ﻿using BS_RECEPT_WATCHER.Models;
 using BS_RECEPT_WATCHER.Services.Api;
 using BS_RECEPT_WATCHER.Services.AsmXmlFile;
+using BS_RECEPT_WATCHER.Services.Data;
 using BS_RECEPT_WATCHER.Services.Print;
 using Serilog;
 using System;
@@ -20,12 +21,16 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
         private readonly IApiService _apiService;
         private readonly IAsmXmlFileGen _asmXmlFileGen;
         private readonly IConfiguration _configuration;
-        public FileProcessor(IPrinter printer, IApiService apiService, IAsmXmlFileGen asmXmlFileGen, IConfiguration configuration)
+        private readonly IUnitStorageProvider _unitStorageProvider;
+        private readonly IUnitStorageCreator _unitStorageCreator;
+        public FileProcessor(IPrinter printer, IApiService apiService, IAsmXmlFileGen asmXmlFileGen, IConfiguration configuration, IUnitStorageProvider unitStorageProvider, IUnitStorageCreator unitStorageCreator)
         {
             _apiService = apiService;
             _printer = printer;
             _asmXmlFileGen = asmXmlFileGen;
             _configuration = configuration;
+            _unitStorageProvider = unitStorageProvider;
+            _unitStorageCreator = unitStorageCreator;
         }
 
         public async Task ParseFile(string file)
@@ -62,7 +67,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                 if (isDoublon == "10")
                 {
                     ProcessDoublon(unitStorage);
-                    await _apiService.CreateUnitStorage(unitStorage);
+                    _unitStorageCreator.CreateUnitStorage(unitStorage);
                     AddLineToXml(unitStorage);
 
                     Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
@@ -71,7 +76,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                 else
                 {
                     ProcessSingle(unitStorage);
-                    await _apiService.CreateUnitStorage(unitStorage);
+                    _unitStorageCreator.CreateUnitStorage(unitStorage);
                     AddLineToXml(unitStorage);
 
                     Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
@@ -87,7 +92,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
         {
             try
             {
-                var latestUnitStorageUid = await _apiService.GetLatestUidWithUnitStorage(uidUnitStorage);
+                var latestUnitStorageUid =  _unitStorageProvider.GetLatestUidWithUnitStorage(uidUnitStorage);
 
                 UnitStorage unitStorage = new UnitStorage()
                 {

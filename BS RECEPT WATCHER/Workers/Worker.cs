@@ -8,6 +8,7 @@ namespace BS_RECEPT_WATCHER.Workers
 {
     public class Worker : BackgroundService
     {
+        
         private readonly ILogger<Worker> _logger;
         private readonly ILogMgr _logMgr;
         private readonly IFileProcessor _fileProcessor;
@@ -36,6 +37,12 @@ namespace BS_RECEPT_WATCHER.Workers
             return base.StartAsync(cancellationToken);
         }
 
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _fileWatcher.Dispose();
+            return base.StopAsync(cancellationToken);
+        }
+
         private void OnFileCreated(object sender, FileSystemEventArgs e)
         {
             _logMgr.WriteCreatedFileContentInLogsFile(_fileToWatchPath, _logFilePath);
@@ -48,10 +55,11 @@ namespace BS_RECEPT_WATCHER.Workers
 
             await _fileProcessor.ParseFile(_fileToWatchPath);
         }
-
+        
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
+            await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
         }
+     
     }
 }
