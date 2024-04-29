@@ -14,7 +14,7 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
             XDocument doc = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
                 new XElement("PackagingList",
-                new XAttribute("ImportVersion", "1.0.1.1"),
+                new XAttribute("ImportVersion", "3.0.1.1"),
                 new XElement("Packaging",
                     new XAttribute("IdPackaging", uidUnitStorage),
                     new XAttribute("ComponentName", articleUnitStorage),
