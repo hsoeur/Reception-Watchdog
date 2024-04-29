@@ -21,7 +21,7 @@ namespace BS_RECEPT_WATCHER.Workers
             _configuration = configuration;
             _logger = logger;
             _fileProcessor = fileProcessor;
-            _fileToWatchPath = _configuration["Files:FileToWatchGpao"];
+            _fileToWatchPath = _configuration["Files:FileToWatchLocal"];
             _logFilePath = _configuration["LogFiles:ContentFileProcessed"];
             _logMgr = logMgr;
 
