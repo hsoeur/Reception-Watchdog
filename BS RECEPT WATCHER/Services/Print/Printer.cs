@@ -37,7 +37,7 @@ namespace BS_RECEPT_WATCHER.Services.Print
             process.Start();
 
             // Écrire la commande dans le terminal CMD
-            process.StandardInput.WriteLine("copy \"C:\\bs\\BS RECEPT WATCHER\\out_file.txt\" LPT1");
+            process.StandardInput.WriteLine("copy \"C:\\bs\\BS RECEPT WATCHER\\out_file.txt\" \\\\hugo_23\\eos5300");
 
             // Fermer le flux d'entrée et attendre la fin de l'exécution
             process.StandardInput.Close();
