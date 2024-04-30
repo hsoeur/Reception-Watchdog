@@ -9,7 +9,7 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
 {
     public class AsmXmlFileGen : IAsmXmlFileGen
     {
-        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage)
+        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin)
         {
             XDocument doc = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
@@ -18,9 +18,10 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
                 new XElement("Packaging",
                     new XAttribute("IdPackaging", uidUnitStorage),
                     new XAttribute("ComponentName", articleUnitStorage),
-                    new XAttribute("ComponentBarcode", ""),
-                    new XAttribute("Quantity", quantityUnitStorage))
-                    )
+                    new XAttribute("ComponentBarcode", articleUnitStorage),
+                    new XAttribute("Quantity", quantityUnitStorage),
+                    new XAttribute("Extra1", magasin))
+                )
             );
 
             string date = DateTime.Now.ToString("hh_mm_ss_ffff");

@@ -17,7 +17,7 @@ B 3,4,0,DATAMATRIX,0.8;#UidCodeArticle#
 T 28,8,0,5,pt16;#UidCodeArticle#
 T 30,21,0,5,pt16;Qte: #Quantite#
 T 69,19,0,5,pt8;#UidUnitStorage#
-T 34,15,0,5,pt16;G60202
+T 34,15,0,5,pt16;#Magasin#
 T 2,20,0,5,pt8;#Date# 
 
 ; nb d'étiquette

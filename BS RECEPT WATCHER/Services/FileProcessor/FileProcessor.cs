@@ -50,19 +50,20 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                     string quantite = parts[5];
                     string uidUnitStorage = parts[10];
                     string isDoublon = parts[24];
+                    string magasin = parts[27];
 
                     cpt++;
                     uidUnitStorage = uidUnitStorage + cpt.ToString("D3");
-                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon);
+                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon, magasin);
                 }
             }
         }
 
-        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon)
+        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon, string magasin)
         {
             try
             {
-                UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage);
+                UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage, magasin);
 
                 if (isDoublon == "10")
                 {
@@ -70,7 +71,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                     _unitStorageCreator.CreateUnitStorage(unitStorage);
                     AddLineToXml(unitStorage);
 
-                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UidArticle} et une quantité de {unitStorage.Quantite} créée.");
 
                 }
                 else
@@ -79,7 +80,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                     _unitStorageCreator.CreateUnitStorage(unitStorage);
                     AddLineToXml(unitStorage);
 
-                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UIDArticle} et une quantité de {unitStorage.Quantite} créée.");
+                    Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UidArticle} et une quantité de {unitStorage.Quantite} créée.");
                 }
             }catch (Exception ex)
             {
@@ -88,7 +89,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
             
         }
 
-        private async Task<UnitStorage> CreateUnitStorageWithLatestUid(string uidArticle, string quantite, string uidUnitStorage)
+        private async Task<UnitStorage> CreateUnitStorageWithLatestUid(string uidArticle, string quantite, string uidUnitStorage, string magasin)
         {
             try
             {
@@ -98,7 +99,8 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                 {
                     UidUnitStorage = latestUnitStorageUid,
                     Quantite = quantite,
-                    UIDArticle = uidArticle
+                    UidArticle = uidArticle,
+                    Magasin = magasin
                 };
                 return unitStorage;
             }
@@ -124,7 +126,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
 
         private void AddLineToXml(UnitStorage unitStorage)
         {
-            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UIDArticle, unitStorage.Quantite);
+            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UidArticle, unitStorage.Quantite, unitStorage.Magasin);
             Log.Information($"Fichier Xml créé pour la bobine n°{unitStorage.UidUnitStorage}");
         }
     }

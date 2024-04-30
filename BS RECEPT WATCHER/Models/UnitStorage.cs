@@ -11,7 +11,8 @@ namespace BS_RECEPT_WATCHER.Models
     {
         [Key]
         public string UidUnitStorage { get; set; } = String.Empty;
+        public string UidArticle { get; set; } = String.Empty;
         public string Quantite { get; set; } = String.Empty;
-        public string UIDArticle { get; set; } = String.Empty;
+        public string Magasin {  get; set; } = String.Empty;
     }
 }
