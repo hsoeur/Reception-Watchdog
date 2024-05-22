@@ -9,7 +9,7 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
 {
     public class AsmXmlFileGen : IAsmXmlFileGen
     {
-        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin, string stockClient)
+        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin, string uidArticleClient, string stockClient)
         {
             XDocument doc = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
