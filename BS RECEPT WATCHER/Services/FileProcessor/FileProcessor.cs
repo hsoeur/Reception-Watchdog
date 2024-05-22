@@ -49,17 +49,26 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                     string uidArticle = parts[0];
                     string quantite = parts[5];
                     string uidUnitStorage = parts[10];
-                    string isDoublon = parts[24];
+                    string isDoublon = parts[19];
                     string magasin = parts[27];
+                    string stockClient = String.Empty;
+
+                    if (uidArticle.Contains("-"))
+                    {
+                        stockClient = uidArticle.Substring(uidArticle.Length - 3);
+                        string separator = "-";
+                        int index = uidArticle.IndexOf(separator);
+                        uidArticle = uidArticle.Substring(0, index);
+                    }
 
                     cpt++;
                     uidUnitStorage = uidUnitStorage + cpt.ToString("D3");
-                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon, magasin);
+                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon, magasin, stockClient);
                 }
             }
         }
 
-        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon, string magasin)
+        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon, string magasin, string stockClient)
         {
             try
             {
@@ -69,7 +78,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                 {
                     ProcessDoublon(unitStorage);
                     _unitStorageCreator.CreateUnitStorage(unitStorage);
-                    AddLineToXml(unitStorage);
+                    AddLineToXml(unitStorage, stockClient);
 
                     Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UidArticle} et une quantité de {unitStorage.Quantite} créée.");
 
@@ -78,7 +87,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                 {
                     ProcessSingle(unitStorage);
                     _unitStorageCreator.CreateUnitStorage(unitStorage);
-                    AddLineToXml(unitStorage);
+                    AddLineToXml(unitStorage, stockClient);
 
                     Log.Information($"Package Unit n° {unitStorage.UidUnitStorage} avec le code composant n°{unitStorage.UidArticle} et une quantité de {unitStorage.Quantite} créée.");
                 }
@@ -100,7 +109,8 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
                     UidUnitStorage = latestUnitStorageUid,
                     Quantite = quantite,
                     UidArticle = uidArticle,
-                    Magasin = magasin
+                    Magasin = magasin,
+                    
                 };
                 return unitStorage;
             }
@@ -124,9 +134,9 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
             _printer.Print(_configuration["Print:OutFile"]);
         }
 
-        private void AddLineToXml(UnitStorage unitStorage)
+        private void AddLineToXml(UnitStorage unitStorage, string stockClient)
         {
-            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UidArticle, unitStorage.Quantite, unitStorage.Magasin);
+            _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UidArticle, unitStorage.Quantite, unitStorage.Magasin, stockClient);
             Log.Information($"Fichier Xml créé pour la bobine n°{unitStorage.UidUnitStorage}");
         }
     }

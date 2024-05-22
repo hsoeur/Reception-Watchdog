@@ -8,6 +8,6 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
 {
     public interface IAsmXmlFileGen
     {
-        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin);
+        public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin, string stockClient);
     }
 }

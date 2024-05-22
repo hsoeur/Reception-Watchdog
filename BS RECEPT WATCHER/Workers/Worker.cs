@@ -32,6 +32,7 @@ namespace BS_RECEPT_WATCHER.Workers
             _fileWatcher.Path = Path.GetDirectoryName(_fileToWatchPath);
             _fileWatcher.Filter = Path.GetFileName(_fileToWatchPath);
             _fileWatcher.Created += OnFileCreated;
+            _fileWatcher.Changed += OnFileCreated;
             _fileWatcher.EnableRaisingEvents = true;
 
             return base.StartAsync(cancellationToken);
