@@ -3,6 +3,7 @@ using BS_RECEPT_WATCHER.Services.Api;
 using BS_RECEPT_WATCHER.Services.FileProcessor;
 using BS_RECEPT_WATCHER.Services.LogMgr;
 using BS_RECEPT_WATCHER.Services.Print;
+using Serilog;
 
 namespace BS_RECEPT_WATCHER.Workers
 {
@@ -16,6 +17,7 @@ namespace BS_RECEPT_WATCHER.Workers
         private FileSystemWatcher _fileWatcher;
         private readonly string _logFilePath;
         private readonly IConfiguration _configuration;
+
         public Worker(ILogger<Worker> logger, IFileProcessor fileProcessor, ILogMgr logMgr, IConfiguration configuration)
         {
             _configuration = configuration;
@@ -28,6 +30,7 @@ namespace BS_RECEPT_WATCHER.Workers
         }
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            File.Delete(_fileToWatchPath);
             _fileWatcher = new FileSystemWatcher();
             _fileWatcher.Path = Path.GetDirectoryName(_fileToWatchPath);
             _fileWatcher.Filter = Path.GetFileName(_fileToWatchPath);
@@ -44,11 +47,51 @@ namespace BS_RECEPT_WATCHER.Workers
             return base.StopAsync(cancellationToken);
         }
 
-        private void OnFileCreated(object sender, FileSystemEventArgs e)
+        private async void OnFileCreated(object sender, FileSystemEventArgs e)
         {
-            _logMgr.WriteCreatedFileContentInLogsFile(_fileToWatchPath, _logFilePath);
 
-            _ = ParseFileAndCreateUnitStorage();
+            try
+            {
+                Log.Information("Traitement du Process");
+                while (IsFileLocked(_fileToWatchPath))
+                {
+                    await Task.Delay(100);
+                }
+
+                _logMgr.WriteCreatedFileContentInLogsFile(_fileToWatchPath, _logFilePath);
+
+                _ = ParseFileAndCreateUnitStorage();
+
+                while (IsFileLocked(_fileToWatchPath))
+                {
+                    await Task.Delay(100);
+                }
+
+                File.Delete(_fileToWatchPath);
+
+                await Task.Delay(1000);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Une erreur est survenue lors du traitement du fichier : {ex.Message}");
+            }
+        }
+
+        private bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private async Task ParseFileAndCreateUnitStorage()
