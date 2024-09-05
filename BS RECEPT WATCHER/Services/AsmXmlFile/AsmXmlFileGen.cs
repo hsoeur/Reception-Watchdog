@@ -7,8 +7,20 @@ using System.Xml.Linq;
 
 namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
 {
+    /// <summary>
+    /// Classe responsable de la création du fichier XML ASMPT pour alimenter la base SetupCenter.
+    /// </summary>
     public class AsmXmlFileGen : IAsmXmlFileGen
     {
+        /// <summary>
+        /// Cette méthode prend les informations d'une unité de stockage en paramètre et créer le fichier XML associé.
+        /// </summary>
+        /// <param name="uidUnitStorage"></param>
+        /// <param name="articleUnitStorage"></param>
+        /// <param name="quantityUnitStorage"></param>
+        /// <param name="magasin"></param>
+        /// <param name="uidArticleClient"></param>
+        /// <param name="stockClient"></param>
         public void GenerateXmlToCreatePackageUnit(string uidUnitStorage, string articleUnitStorage, string quantityUnitStorage, string magasin, string uidArticleClient, string stockClient)
         {
             XDocument doc = new XDocument(

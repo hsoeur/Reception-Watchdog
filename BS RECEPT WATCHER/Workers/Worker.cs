@@ -34,7 +34,17 @@ namespace BS_RECEPT_WATCHER.Workers
             _fileWatcher = new FileSystemWatcher();
             _fileWatcher.Path = Path.GetDirectoryName(_fileToWatchPath);
             _fileWatcher.Filter = Path.GetFileName(_fileToWatchPath);
-            _fileWatcher.Created += OnFileCreated;
+
+            _fileWatcher.NotifyFilter = NotifyFilters.Attributes
+                         | NotifyFilters.CreationTime
+                         | NotifyFilters.DirectoryName
+                         | NotifyFilters.FileName
+                         | NotifyFilters.LastAccess
+                         | NotifyFilters.LastWrite
+                         | NotifyFilters.Security
+                         | NotifyFilters.Size;
+
+            //_fileWatcher.Created += OnFileCreated;
             _fileWatcher.Changed += OnFileCreated;
             _fileWatcher.EnableRaisingEvents = true;
 
@@ -49,10 +59,12 @@ namespace BS_RECEPT_WATCHER.Workers
 
         private async void OnFileCreated(object sender, FileSystemEventArgs e)
         {
-
             try
             {
+                _fileWatcher.EnableRaisingEvents = false; // Désactiver les événements
+
                 Log.Information("Traitement du Process");
+
                 while (IsFileLocked(_fileToWatchPath))
                 {
                     await Task.Delay(100);
@@ -75,7 +87,12 @@ namespace BS_RECEPT_WATCHER.Workers
             {
                 Log.Error($"Une erreur est survenue lors du traitement du fichier : {ex.Message}");
             }
+            finally
+            {
+                _fileWatcher.EnableRaisingEvents = true; // Réactiver les événements
+            }
         }
+
 
         private bool IsFileLocked(string filePath)
         {

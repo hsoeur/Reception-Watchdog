@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace BS_RECEPT_WATCHER.Services.Data
 {
-
+    /// <summary>
+    /// Data Access Layer pour créer une unité de stockage dans la base de données local SQLite.
+    /// </summary>
     public class DatabaseUnitStorageCreator : IUnitStorageCreator
     {
         private readonly BsReceptWatcherDbContextFactory _dbContextFactory;

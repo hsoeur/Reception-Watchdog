@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace BS_RECEPT_WATCHER.Services.Data
 {
+ 
+    /// <summary>
+    /// Classe essentiellement utilisée pour récupérer le dernier identifiant d'une bobine correspondant à un numéro de réception.
+    /// </summary>
     public class DatabaseUnitStorageProvider : IUnitStorageProvider
     {
         private readonly BsReceptWatcherDbContextFactory _dbContextFactory;

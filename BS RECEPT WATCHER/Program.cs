@@ -1,3 +1,4 @@
+using App.WindowsService.Services.FileProcessor;
 using BS_RECEPT_WATCHER.Context;
 using BS_RECEPT_WATCHER.Services.Api;
 using BS_RECEPT_WATCHER.Services.AsmXmlFile;
