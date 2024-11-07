@@ -53,7 +53,7 @@ namespace BS_RECEPT_WATCHER.Services.Print
             templateContent = templateContent.Replace("#UidCodeArticle#", unitStorage.UidArticleClient);
             templateContent = templateContent.Replace("#Quantite#", unitStorage.Quantite);
             templateContent = templateContent.Replace("#Magasin#", unitStorage.Magasin);
-            templateContent = templateContent.Replace("#Date#", DateTime.Now.ToString("dd/MM/yyyy"));
+            templateContent = templateContent.Replace("#Date#", unitStorage.DateReception);
             templateContent = templateContent.Replace("#QuantiteEtiquettes#", "2");
 
             File.WriteAllText(@"C:\bs\BS RECEPT WATCHER\out_file.txt", templateContent);
@@ -69,7 +69,7 @@ namespace BS_RECEPT_WATCHER.Services.Print
             templateContent = templateContent.Replace("#UidCodeArticle#", unitStorage.UidArticleClient);
             templateContent = templateContent.Replace("#Quantite#", unitStorage.Quantite);
             templateContent = templateContent.Replace("#Magasin#", unitStorage.Magasin);
-            templateContent = templateContent.Replace("#Date#", DateTime.Now.ToString("dd/MM/yyyy"));
+            templateContent = templateContent.Replace("#Date#", unitStorage.DateReception);
             templateContent = templateContent.Replace("#QuantiteEtiquettes#", "1");
 
             File.WriteAllText(@"C:\bs\BS RECEPT WATCHER\out_file.txt", templateContent);

@@ -21,5 +21,7 @@ namespace BS_RECEPT_WATCHER.Models
 
         [NotMapped]
         public string StockClient { get; set; } = String.Empty;
+        [NotMapped]
+        public string DateReception {  get; set; } = String.Empty;
     }
 }

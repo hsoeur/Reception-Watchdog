@@ -58,6 +58,7 @@ namespace App.WindowsService.Services.FileProcessor
                     string uidUnitStorage = parts[10];
                     string isDoublon = parts[19];
                     string magasin = parts[27];
+                    string dateReception = parts[28];
                     string stockClient = string.Empty;
                     string uidArticleClient = uidArticle;
 
@@ -71,7 +72,7 @@ namespace App.WindowsService.Services.FileProcessor
 
                     cpt++;
                     uidUnitStorage = uidUnitStorage + cpt.ToString("D3");
-                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon, magasin, stockClient, uidArticleClient, stockClient);
+                    await CreateUnitStorageAndPrint(uidArticle, quantite, uidUnitStorage, isDoublon, magasin, stockClient, uidArticleClient, stockClient, dateReception);
                 }
             }
         }
@@ -88,11 +89,11 @@ namespace App.WindowsService.Services.FileProcessor
         /// <param name="uidArticleClient"></param>
         /// <param name="stockClient1"></param>
         /// <returns></returns>
-        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon, string magasin, string stockClient, string uidArticleClient, string stockClient1)
+        private async Task CreateUnitStorageAndPrint(string uidArticle, string quantite, string uidUnitStorage, string isDoublon, string magasin, string stockClient, string uidArticleClient, string stockClient1, string dateReception)
         {
             try
             {
-                UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage, magasin, uidArticleClient, stockClient);
+                UnitStorage unitStorage = await CreateUnitStorageWithLatestUid(uidArticle, quantite, uidUnitStorage, magasin, uidArticleClient, stockClient, dateReception);
 
                 if (isDoublon == "10")
                 {
@@ -129,7 +130,7 @@ namespace App.WindowsService.Services.FileProcessor
         /// <param name="uidArticleClient"></param>
         /// <param name="stockClient"></param>
         /// <returns></returns>
-        private async Task<UnitStorage> CreateUnitStorageWithLatestUid(string uidArticle, string quantite, string uidUnitStorage, string magasin, string uidArticleClient, string stockClient)
+        private async Task<UnitStorage> CreateUnitStorageWithLatestUid(string uidArticle, string quantite, string uidUnitStorage, string magasin, string uidArticleClient, string stockClient, string dateReception)
         {
             try
             {
@@ -142,7 +143,8 @@ namespace App.WindowsService.Services.FileProcessor
                     UidArticle = uidArticle,
                     Magasin = magasin,
                     UidArticleClient = uidArticleClient,
-                    StockClient = stockClient
+                    StockClient = stockClient,
+                    DateReception = dateReception
 
                 };
 
