@@ -13,7 +13,6 @@ namespace BS_RECEPT_WATCHER.Context
         
         public DbSet<UnitStorage> UnitStorages { get; set; }
 
-
         public BsReceptWatcherDbContext()
         {
 
