@@ -184,5 +184,37 @@ namespace App.WindowsService.Services.FileProcessor
             _asmXmlFileGen.GenerateXmlToCreatePackageUnit(unitStorage.UidUnitStorage, unitStorage.UidArticle, unitStorage.Quantite, unitStorage.Magasin, unitStorage.UidArticleClient, unitStorage.StockClient);
             Log.Information($"Fichier Xml créé pour la bobine n°{unitStorage.UidUnitStorage}");
         }
+
+        /// <summary>
+        /// Vérifie que toutes les lignes du fichier CSV ont le même uidUnitStorage.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public bool IsFileValid(string file)
+        {
+            HashSet<string> uniqueUnitStorageUids = new HashSet<string>();
+
+            using (StreamReader reader = new StreamReader(file))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(';');
+                    if (parts.Length < 11) continue; // Sécurité
+
+                    string uidUnitStorage = parts[10];
+                    uniqueUnitStorageUids.Add(uidUnitStorage);
+
+                    if (uniqueUnitStorageUids.Count > 1)
+                    {
+                        // Inutile de continuer, on a déjà plusieurs uidUnitStorage différents
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
     }
 }

@@ -10,5 +10,7 @@ namespace BS_RECEPT_WATCHER.Services.FileProcessor
     public interface IFileProcessor
     {
         public Task ParseFile(string file);
+        public bool IsFileValid(string file);
+
     }
 }

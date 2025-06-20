@@ -3,7 +3,9 @@ using BS_RECEPT_WATCHER.Services.Api;
 using BS_RECEPT_WATCHER.Services.FileProcessor;
 using BS_RECEPT_WATCHER.Services.LogMgr;
 using BS_RECEPT_WATCHER.Services.Print;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Serilog;
+using System.Diagnostics;
 
 namespace BS_RECEPT_WATCHER.Workers
 {
@@ -113,14 +115,20 @@ namespace BS_RECEPT_WATCHER.Workers
 
         private async Task ParseFileAndCreateUnitStorage()
         {
+            if (!_fileProcessor.IsFileValid(_fileToWatchPath))
+            {
+                Log.Error("Des uidUnitStorage différents ont été trouvés dans le fichier CSV. TRAITEMENT ANNULE !!!.");
+
+                return;
+            }
 
             await _fileProcessor.ParseFile(_fileToWatchPath);
         }
-        
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
         }
-     
+       
     }
 }

@@ -38,7 +38,7 @@ namespace BS_RECEPT_WATCHER.Services.AsmXmlFile
             );
 
             string date = DateTime.Now.ToString("hh_mm_ss_ffff");
-            string filepath = @"\\vmerp\CISA\Recup\EXPORT_PRODUCTION\BSWATCHERRECEPT_CREATE_" + date + ".xml";
+            string filepath = @"\\vmerp\CISA\Recup\EXPORT_PRODUCTION\BSWATCHERRECEPT_CREATE_" + date + uidUnitStorage +".xml";
 
             using (StreamWriter writer = new StreamWriter(filepath))
             {
